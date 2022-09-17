@@ -5,3 +5,5 @@
 # Environment Variables
 .env
 
+# Django
+migrations/
