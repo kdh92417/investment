@@ -156,7 +156,7 @@ def upload_asset_basic(csv_asset_basic):
             "failed_rows": 0,
             "invalid_rows": [],
         }
-        test = {}
+
         for idx, row in enumerate(data_reader):
             # 헤더는 건너뜀
             if idx == 0:
