@@ -4,7 +4,7 @@ from django.db import models
 class Account(models.Model):
     """계좌 모델"""
 
-    account_number = models.CharField("계좌번호", max_length=30, primary_key=True)
+    account_number = models.CharField("계좌번호", max_length=30)
     account_name = models.CharField("계좌명", max_length=45, null=False)
     total_assets = models.DecimalField(
         "계좌 총 자산", max_digits=17, decimal_places=2, default=0, null=True, blank=True
@@ -24,7 +24,6 @@ class User(models.Model):
         Account,
         on_delete=models.SET_DEFAULT,
         related_name="user",
-        primary_key=True,
         default="0",
     )
     name = models.CharField(max_length=45, null=False, blank=False)
@@ -42,7 +41,7 @@ class Investment(models.Model):
     """투자 모델"""
 
     user = models.OneToOneField(
-        User, on_delete=models.CASCADE, primary_key=True, related_name="investment"
+        User, on_delete=models.CASCADE, related_name="investment"
     )
     brokerage = models.CharField("증권사", max_length=45)
     principal = models.DecimalField(
