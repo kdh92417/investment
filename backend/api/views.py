@@ -1,3 +1,40 @@
-from django.shortcuts import render
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
-# Create your views here.
+from api.models import User, Investment, UserHolding
+from api.serializers import (
+    InvestmentViewSerializer,
+    InvestmentDetailViewSerializer,
+    UserHoldingViewSerializer,
+)
+
+
+class InvestmentView(APIView):
+    """투자화면 상세 API"""
+
+    def get(self, request, pk):
+        queryset = User.objects.get(id=pk)
+        serializer = InvestmentViewSerializer(queryset)
+
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
+class InvestmentDetailView(APIView):
+    """투자상세 화면 API"""
+
+    def get(self, request, pk):
+        queryset = Investment.objects.get(id=pk)
+        serializer = InvestmentDetailViewSerializer(queryset)
+
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
+class UserHoldingView(APIView):
+    """보유종목 화면 API"""
+
+    def get(self, request, pk):
+        queryset = UserHolding.objects.filter(user=User.objects.get(id=pk))
+        serializer = UserHoldingViewSerializer(queryset, many=True)
+
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
