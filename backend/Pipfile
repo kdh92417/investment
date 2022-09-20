@@ -9,6 +9,7 @@ djangorestframework = "*"
 python-dotenv = "*"
 black = "*"
 mysqlclient = "*"
+pyjwt = "*"
 
 [dev-packages]
 
