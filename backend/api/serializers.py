@@ -68,6 +68,7 @@ class UserHoldingViewSerializer(serializers.ModelSerializer):
         model = UserHolding
         fields = ["holding_name", "asset_group", "isin", "appraisal_amount"]
 
+    #
     def get_appraisal_amount(self, obj):
         return obj.quantity * obj.current_price
 
@@ -76,7 +77,7 @@ class DepositLogSerializer(serializers.ModelSerializer):
     """입금거래 정보 Serializer"""
 
     transfer_identifier = serializers.IntegerField(source="id", read_only=True)
-    # user
+
     class Meta:
         model = DepositLog
         fields = [
@@ -114,15 +115,17 @@ class AssetSerializer(serializers.ModelSerializer):
         signature = validated_data.pop("signature")
 
         try:
-
+            # signature 디코드
             encoded_data = jwt.decode(
                 signature, SECRET_KEY, algorithms=[SIGNATURE_ALGORITHM]
             )
 
+            # 클레임에 담긴 정보들
             account_number = encoded_data.get("account_number", None)
             user_name = encoded_data.get("user_name", None)
             transfer_amount = encoded_data.get("transfer_amount", None)
 
+            # phase1 API에서 등록정보들이 클레임에담긴 정보와 일치하는지 확인
             if (
                 account_number == instance.account_number
                 and user_name == instance.user_name
@@ -131,9 +134,13 @@ class AssetSerializer(serializers.ModelSerializer):
                 instance.status = True
                 instance.save()
 
+                # 트랜잭션이 몰릴경우 동시성 문제를 해결하기 위해 select_for_update 사용
+                # nowait = True : 해당 row 락이 잡혀있으면 풀릴때까지 기다림
                 account = Account.objects.select_for_update(nowait=False).get(
                     account_number=account_number
                 )
+
+                # 유효한 정보면 자산업데이트
                 account.total_assets += transfer_amount
                 account.save()
 
