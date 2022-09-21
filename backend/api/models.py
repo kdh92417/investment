@@ -78,3 +78,19 @@ class UserHolding(models.Model):
 
     class Meta:
         db_table = "users_holdings"
+
+
+class DepositLog(models.Model):
+    """입금정보 모델"""
+
+    user_name = models.CharField(max_length=45, null=False, blank=False)
+    account_number = models.CharField("계좌번호", max_length=30)
+    transfer_amount = models.DecimalField(
+        max_digits=17, decimal_places=2, null=False, blank=False
+    )
+    exp = models.DateTimeField()
+    signature = models.CharField(max_length=300)
+    status = models.BooleanField(default=False)
+
+    class Meta:
+        db_table = "deposit_logs"

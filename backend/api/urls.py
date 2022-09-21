@@ -14,4 +14,9 @@ urlpatterns = [
         views.UserHoldingView.as_view(),
         name="user-holdings",
     ),
+    path(
+        "investments/deposit/",
+        views.InvestmentDeposit.as_view(),
+        name="investment-deposit",
+    ),
 ]
