@@ -4,8 +4,6 @@
 
    - [주요 사항](#주요-사항)
 
-   - [구현 내용](#구현-내용)
-
 2. [개발 기간](#개발-기간)
 
 3. [기술 스택](#기술-스택)
@@ -38,11 +36,6 @@
 - `django-apscheduler` 를 이용한 매일 아침 6시 csv 데이터셋 업로드
 
 
-### 구현 내용
-
-- 
-
-
 ## 개발 기간
 - 요구사항 개발 및 문서작업: 2022.09.16 ~ 2022.09.21
 
@@ -55,11 +48,11 @@
 
 | **Endpoints**         	| **Method** 	| **기능** 	|
 |-----------------------	|:----------:	|----------	|
-| investments/id        	|     GET    	|  투자 화면 데이터 응답     	|
-| investments/detail/id 	|     GET    	|  투자 상세화면 데이터 응답        	|
-| users/holdings/id     	|     GET    	|  보유 종목화면 데이터 응답       	|
-| investments/deposit   	|    POST    	|  입금 거래정보 등록       	|
-| investments/deposit   	|     PUT    	|  거래정보 검증 및 자산업데이트       	|
+| api/v1/investments/:id        	|     GET    	|  투자 화면 데이터 응답     	|
+| api/v1/investments/detail/:id 	|     GET    	|  투자 상세화면 데이터 응답        	|
+| api/v1/users/:id/holdings  	|     GET    	|  보유 종목화면 데이터 응답       	|
+| api/v1/investments/deposit   	|    POST    	|  입금 거래정보 등록       	|
+| api/v1/investments/deposit   	|     PUT    	|  거래정보 검증 및 자산업데이트       	|
 
 
 ## ERD
