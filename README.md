@@ -16,11 +16,13 @@
 
 6. [Reference Docs](#reference-docs)
 
+<br>
 
 ## 프로젝트 내용
 
 > 고객의 투자 데이터를 응답하는 API 개발
 
+<br>
 
 ### 주요사항
 
@@ -38,12 +40,13 @@
 
 ### 구현 내용
 
+- 
 
 
-## 개발기간
+## 개발 기간
 - 요구사항 개발 및 문서작업: 2022.09.16 ~ 2022.09.21
 
-## 개발 스택
+## 기술 스택
 - Backend: `Django Rest Framework`
 - DB: `MySQL`
 - Tool: `Github`
@@ -60,6 +63,7 @@
 
 
 ## ERD
+![investment](https://user-images.githubusercontent.com/58774316/191425222-7b7594ff-5c06-47ce-9594-436d02594c57.png)
 
 
 ## Reference Docs
