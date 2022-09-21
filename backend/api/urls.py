@@ -10,7 +10,7 @@ urlpatterns = [
         name="investment-detail",
     ),
     path(
-        "users/holdings/<int:pk>",
+        "users/<int:pk>/holdings",
         views.UserHoldingView.as_view(),
         name="user-holdings",
     ),
