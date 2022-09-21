@@ -3,6 +3,7 @@ from django.db import transaction
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
+from api.common import calculate_total_proceeds, calculate_proceeds_rate
 from api.models import User, Investment, UserHolding, DepositLog, Account
 from backend.settings.base import SECRET_KEY, SIGNATURE_ALGORITHM
 
@@ -11,19 +12,16 @@ class InvestmentViewSerializer(serializers.ModelSerializer):
     """투자화면 Serializer"""
 
     account_number = serializers.ReadOnlyField(source="account.account_number")
-    account_name = serializers.ReadOnlyField(source="account.account_name")
     account_total_assets = serializers.ReadOnlyField(source="account.total_assets")
     brokerage = serializers.ReadOnlyField(source="investment.brokerage")
 
     class Meta:
         model = User
         fields = [
-            "name",
+            "user_name",
             "account_number",
-            "account_name",
             "brokerage",
             "account_total_assets",
-            "investment",
         ]
 
 
@@ -50,10 +48,12 @@ class InvestmentDetailViewSerializer(serializers.ModelSerializer):
         ]
 
     def get_total_proceeds(self, obj):
-        return obj.user.account.total_assets - obj.principal
+        """총 수익금"""
+        return calculate_total_proceeds(obj)
 
     def get_proceeds_rate(self, obj):
-        return (obj.user.account.total_assets - obj.principal) / (obj.principal * 100)
+        """수익률"""
+        return calculate_proceeds_rate(obj)
 
 
 class UserHoldingViewSerializer(serializers.ModelSerializer):

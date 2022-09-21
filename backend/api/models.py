@@ -26,7 +26,7 @@ class User(models.Model):
         related_name="user",
         default="0",
     )
-    name = models.CharField(max_length=45, null=False, blank=False)
+    user_name = models.CharField(max_length=45, null=False, blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True, blank=True)
 
@@ -34,7 +34,7 @@ class User(models.Model):
         db_table = "users"
 
     def __str__(self):
-        return self.name
+        return self.user_name
 
 
 class Investment(models.Model):

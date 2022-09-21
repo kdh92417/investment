@@ -217,7 +217,7 @@ def execute_csv_uploader():
     Execute all csv uploader function
     :return:
     """
-    filename = os.path.join(dir_path, "../test_log.log")
+    filename = os.path.join(dir_path, "../csv_uploader_log.log")
 
     # Logger
     logger = logging.getLogger(__name__)
@@ -236,7 +236,7 @@ def execute_csv_uploader():
     upload_asset_basic(CSV_ACCOUNT_BASIC)
     calculate_account_total_asset()
 
-    logger.info("csv upload start.. end")
+    logger.info("csv upload end..")
 
 
 def start():
@@ -251,6 +251,7 @@ def start():
         execute_csv_uploader,
         id="execute_csv_uploader",
         trigger=CronTrigger(hour="6"),
+        # trigger=CronTrigger(second="*/20"),
         max_instances=1,
         replace_existing=True,
         coalesce=True,
