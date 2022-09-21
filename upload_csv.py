@@ -1,3 +1,4 @@
+import logging
 import os
 import django
 from django.core.exceptions import ValidationError
@@ -205,8 +206,25 @@ def calculate_account_total_asset():
         raise ValidationError(str(e))
 
 
-if __name__ == "__main__":
+def execute_csv_uploader():
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    filename = os.path.join(dir_path, "test_log.log")
+
+    # Logger
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.INFO)
+
+    file_handler = logging.FileHandler(filename)
+    file_handler.setLevel(logging.INFO)
+    file_handler.setFormatter(
+        logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+    )
+    logger.addHandler(file_handler)
+    logger.info("start..")
+    print("start")
     upload_asset_group_info(CSV_ASSET_GROUP)
     upload_asset_info(CSV_ACCOUNT_ASSET)
     upload_asset_basic(CSV_ACCOUNT_BASIC)
     calculate_account_total_asset()
+    print("end")
+    logger.info("end..")
