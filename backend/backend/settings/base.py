@@ -33,19 +33,26 @@ ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
+LOCAL_APPS = [
+    "api",
+    "jobs",
+]
 
-INSTALLED_APPS = [
+DJANGO_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+]
+
+THIRD_PARTY_APPS = [
     "rest_framework",
     "django_apscheduler",
-    "api",
-    "jobs",
 ]
+
+INSTALLED_APPS = LOCAL_APPS + DJANGO_APPS + THIRD_PARTY_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -88,6 +95,7 @@ DATABASES = {
     }
 }
 
+
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
@@ -118,7 +126,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = False
+USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
@@ -126,13 +134,8 @@ USE_TZ = False
 
 STATIC_URL = "/static/"
 
-# CRONJOBS = [
-#     (
-#         "*/1 * * * *",
-#         "upload_csv",
-#         ">> " + os.path.join(BASE_DIR, "log/cron.log") + " 2>&1 ",
-#     )
-# ]
-
 # 스케쥴러 자동 시작
 SCHEDULER_DEFAULT = True
+
+# End Slash = False
+APPEND_SLASH = False
