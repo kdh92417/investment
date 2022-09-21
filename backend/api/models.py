@@ -4,7 +4,7 @@ from django.db import models
 class Account(models.Model):
     """계좌 모델"""
 
-    account_number = models.CharField("계좌번호", max_length=30)
+    account_number = models.CharField("계좌번호", max_length=30, unique=True)
     account_name = models.CharField("계좌명", max_length=45, null=False)
     total_assets = models.DecimalField(
         "계좌 총 자산", max_digits=17, decimal_places=2, default=0, null=True, blank=True
