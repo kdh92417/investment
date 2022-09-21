@@ -1,6 +1,10 @@
+import jwt
+from django.db import transaction
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
-from api.models import User, Investment, UserHolding
+from api.models import User, Investment, UserHolding, DepositLog, Account
+from backend.settings.base import SECRET_KEY, SIGNATURE_ALGORITHM
 
 
 class InvestmentViewSerializer(serializers.ModelSerializer):
@@ -66,3 +70,75 @@ class UserHoldingViewSerializer(serializers.ModelSerializer):
 
     def get_appraisal_amount(self, obj):
         return obj.quantity * obj.current_price
+
+
+class DepositLogSerializer(serializers.ModelSerializer):
+    """입금거래 정보 Serializer"""
+
+    transfer_identifier = serializers.IntegerField(source="id", read_only=True)
+    # user
+    class Meta:
+        model = DepositLog
+        fields = [
+            "user_name",
+            "account_number",
+            "exp",
+            "transfer_amount",
+            "signature",
+            "transfer_identifier",
+        ]
+        extra_kwargs = {
+            "exp": {"write_only": True},
+            "user_name": {"write_only": True},
+            "account_number": {"write_only": True},
+            "transfer_amount": {"write_only": True},
+            "signature": {"write_only": True},
+        }
+
+
+class AssetSerializer(serializers.ModelSerializer):
+    """자산 Serializer"""
+
+    transfer_identifier = serializers.IntegerField(source="id", write_only=True)
+
+    class Meta:
+        model = DepositLog
+        fields = ["signature", "transfer_identifier", "status"]
+        extra_kwargs = {
+            "signature": {"write_only": True},
+            "status": {"read_only": True},
+        }
+
+    @transaction.atomic
+    def update(self, instance, validated_data):
+        signature = validated_data.pop("signature")
+
+        try:
+
+            encoded_data = jwt.decode(
+                signature, SECRET_KEY, algorithms=[SIGNATURE_ALGORITHM]
+            )
+
+            account_number = encoded_data.get("account_number", None)
+            user_name = encoded_data.get("user_name", None)
+            transfer_amount = encoded_data.get("transfer_amount", None)
+
+            if (
+                account_number == instance.account_number
+                and user_name == instance.user_name
+                and transfer_amount == instance.transfer_amount
+            ):
+                instance.status = True
+                instance.save()
+
+                account = Account.objects.select_for_update(nowait=False).get(
+                    account_number=account_number
+                )
+                account.total_assets += transfer_amount
+                account.save()
+
+                return instance
+
+        except Exception as e:
+            transaction.set_rollback(rollback=True)
+            raise ValidationError(str(e))
